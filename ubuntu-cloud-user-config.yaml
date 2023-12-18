@@ -5,7 +5,7 @@ disable_root: false
 manage_etc_hosts: true
 fqdn: ubuntu-cloud
 
-user: campbellrehu
+user: [USERNAME_HERE]
 password: [PASSWORD_HERE]
 ssh_authorized_keys:
   - [SSH_KEY_HERE]
