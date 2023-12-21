@@ -39,3 +39,10 @@ qm set 5000 --cicustom "user=local:snippets/ubuntu-cloud-user-config.yaml"
 ```bash
 qm template 5000
 ```
+
+# Credits
+
+These steps are an amalgamation of the steps found in the following repos:
+
+- https://github.com/JamesTurland/JimsGarage/tree/main/Kubernetes/Cloud-Init
+- https://github.com/chris2k20/proxmox-cloud-init
