@@ -6,7 +6,7 @@ manage_etc_hosts: true
 fqdn: ubuntu-cloud
 
 user: [USERNAME_HERE]
-password: [PASSWORD_HERE]
+password: [PASSWORD_HASH_HERE] # use mkpasswd --method=SHA-512 --rounds=4096 (apt install whois)
 ssh_authorized_keys:
   - [SSH_KEY_HERE]
 
@@ -30,6 +30,7 @@ packages:
 
 runcmd:
   - sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+  - sed -i 's/^#PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
   - sed -i -e 's/^GSSAPIAuthentication yes/GSSAPIAuthentication no/g' /etc/ssh/sshd_config
   - sed -i -e 's/^PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
   - systemctl restart sshd
