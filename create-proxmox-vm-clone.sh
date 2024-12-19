@@ -4,12 +4,15 @@ function usage() {
   echo "Usage: $0 -i <VM_ID> -s <STORAGE_NAME> -I <IMAGE_PATH>"
   echo "  -i, --id           VM ID"
   echo "  -s, --storage      Storage name"
-  echo "  -I, --imagePath    Image path"
+  echo "  -p, --imagePath    Image path"
+  echo "  -n, --name         VM name"
   echo "  -h, --help         Display help"
   exit 1
 }
 function checkArgs() {
-  if [ -z "$VM_ID" ] || [ -z "$STORAGE_NAME" ] || [ -z "$IMAGE_PATH" ]; then
+  if [ -z "$VM_ID" ] || [ -z "$STORAGE_NAME" ] || [ -z "$IMAGE_PATH" ] || [ -z "$VM_NAME" ]; then
+    echo "Missing argument"
+    echo "VM_ID: $VM_ID" "STORAGE_NAME: $STORAGE_NAME" "IMAGE_PATH: $IMAGE_PATH"
     usage
   else
     run
@@ -27,9 +30,13 @@ function handleOptions() {
       shift
       STORAGE_NAME=$1
       ;;
-    -I | --imagePath)
+    -p | --imagePath)
       shift
       IMAGE_PATH=$1
+      ;;
+    -n | --name)
+      shift
+      VM_NAME=$1
       ;;
     -h | --help)
       usage
@@ -46,7 +53,7 @@ function handleOptions() {
 }
 
 function run() {
-  qm create "$VM_ID" --memory 2048 --core 2 --name ubuntu-cloud --net0 virtio,bridge=vmbr0
+  qm create "$VM_ID" --memory 2048 --core 2 --name "$VM_NAME" --net0 virtio,bridge=vmbr0
   qm importdisk "$VM_ID" "$IMAGE_PATH" "$STORAGE_NAME"
   qm set "$VM_ID" --scsihw virtio-scsi-pci --scsi0 "$STORAGE_NAME":vm-"$VM_ID"-disk-0
   qm set "$VM_ID" --ide2 "$STORAGE_NAME":cloudinit
