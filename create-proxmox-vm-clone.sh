@@ -20,9 +20,11 @@ function handleOptions() {
   while [ $# -gt 0 ]; do
     case $1 in
     -i | --id)
+      shift
       VM_ID=$1
       ;;
     -s | --storage)
+      shift
       STORAGE_NAME=$1
       ;;
     -I | --imagePath)
