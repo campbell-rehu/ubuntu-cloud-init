@@ -1,18 +1,19 @@
 #!/bin/bash
 
 function usage() {
-  echo "Usage: $0 -i <VM_ID> -s <STORAGE_NAME> -I <IMAGE_PATH>"
+  echo "Usage: $0 -i <VM_ID> -s <STORAGE_NAME> -p <IMAGE_PATH> -n <VM_NAME> -d <DISK_PATH>"
   echo "  -i, --id           VM ID"
   echo "  -s, --storage      Storage name"
   echo "  -p, --imagePath    Image path"
   echo "  -n, --name         VM name"
+  echo "  -d, --diskPath     Disk path"
   echo "  -h, --help         Display help"
   exit 1
 }
 function checkArgs() {
-  if [ -z "$VM_ID" ] || [ -z "$STORAGE_NAME" ] || [ -z "$IMAGE_PATH" ] || [ -z "$VM_NAME" ]; then
+  if [ -z "$VM_ID" ] || [ -z "$STORAGE_NAME" ] || [ -z "$IMAGE_PATH" ] || [ -z "$VM_NAME" ] || [ -z "$DISK_PATH" ]; then
     echo "Missing argument"
-    echo "VM_ID: $VM_ID" "STORAGE_NAME: $STORAGE_NAME" "IMAGE_PATH: $IMAGE_PATH"
+    echo "VM_ID: $VM_ID" "STORAGE_NAME: $STORAGE_NAME" "IMAGE_PATH: $IMAGE_PATH" "VM_NAME: $VM_NAME" "DISK_PATH: $DISK_PATH"
     usage
   else
     run
@@ -38,6 +39,10 @@ function handleOptions() {
       shift
       VM_NAME=$1
       ;;
+    -d | --diskPath)
+      shift
+      DISK_PATH=$1
+      ;;
     -h | --help)
       usage
       ;;
@@ -55,7 +60,7 @@ function handleOptions() {
 function run() {
   qm create "$VM_ID" --memory 2048 --core 2 --name "$VM_NAME" --net0 virtio,bridge=vmbr0
   qm importdisk "$VM_ID" "$IMAGE_PATH" "$STORAGE_NAME"
-  qm set "$VM_ID" --scsihw virtio-scsi-pci --scsi0 "$STORAGE_NAME":vm-"$VM_ID"-disk-0
+  qm set "$VM_ID" --scsihw virtio-scsi-pci --scsi0 "$DISK_PATH"
   qm set "$VM_ID" --ide2 "$STORAGE_NAME":cloudinit
   qm set "$VM_ID" --boot c --bootdisk scsi0
   qm set "$VM_ID" --serial0 socket --vga serial0
