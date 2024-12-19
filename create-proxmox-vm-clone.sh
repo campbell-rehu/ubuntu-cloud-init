@@ -53,6 +53,8 @@ function run() {
   qm set "$VM_ID" --ipconfig0 "ip=dhcp"
   qm set "$VM_ID" --agent enabled=1,fstrim_cloned_disks=1
   qm resize "$VM_ID" scsi0 +10G
+  qm set "$VM_ID" --cicustom "user=local:snippets/ubuntu-cloud-user-config.yaml"
+  qm template "$VM_ID"
 }
 
 handleOptions "$@"
