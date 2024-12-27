@@ -1,22 +1,18 @@
 #cloud-config
-hostname: ubuntu-cloud
-ssh_pwauth: true
-disable_root: false
+hostname: ubuntu-noble-all
 manage_etc_hosts: true
-fqdn: ubuntu-cloud
+fqdn: ubuntu-noble-all
+locale: en_NZ
 
-user: [USERNAME_HERE]
-password: [PASSWORD_HASH_HERE] # use mkpasswd --method=SHA-512 --rounds=4096 (apt install whois)
+user: campbellrehu
+password: $5$tbA4ZZwA$KmgHcPjleEa8TGxEmm6fpRjpwSsSU1QNRvVlruQtAnD
 ssh_authorized_keys:
-  - [SSH_KEY_HERE]
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIElYj3+Q3vgQaJ6Bs7g5JeIJIBz/w52iqnipI5O3do8F campbellrehu
 
 chpasswd:
   list: |
     root:password
   expire: false
-
-users:
-  - default
 
 write_files:
   - path: /etc/sudoers.d/cloud-init
